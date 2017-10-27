@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F458D8A21FA384BD00ED46A7 /* VideoCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458D89F1FA384BD00ED46A7 /* VideoCameraType.swift */; };
+		F458D8A31FA384BD00ED46A7 /* VideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458D8A01FA384BD00ED46A7 /* VideoCapture.swift */; };
+		F458D8A41FA384BD00ED46A7 /* AVCaptureDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458D8A11FA384BD00ED46A7 /* AVCaptureDevice+Extension.swift */; };
 		F4BB117A1FA1292300405F1B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BB11791FA1292300405F1B /* AppDelegate.swift */; };
 		F4BB117F1FA1292300405F1B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4BB117D1FA1292300405F1B /* Main.storyboard */; };
 		F4BB11811FA1292300405F1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4BB11801FA1292300405F1B /* Assets.xcassets */; };
@@ -24,6 +27,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F458D89F1FA384BD00ED46A7 /* VideoCameraType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCameraType.swift; sourceTree = "<group>"; };
+		F458D8A01FA384BD00ED46A7 /* VideoCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCapture.swift; sourceTree = "<group>"; };
+		F458D8A11FA384BD00ED46A7 /* AVCaptureDevice+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Extension.swift"; sourceTree = "<group>"; };
 		F4BB11761FA1292300405F1B /* ai11.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ai11.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4BB11791FA1292300405F1B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4BB117E1FA1292300405F1B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -53,6 +59,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F458D89E1FA384BD00ED46A7 /* VideoCapture */ = {
+			isa = PBXGroup;
+			children = (
+				F458D89F1FA384BD00ED46A7 /* VideoCameraType.swift */,
+				F458D8A01FA384BD00ED46A7 /* VideoCapture.swift */,
+				F458D8A11FA384BD00ED46A7 /* AVCaptureDevice+Extension.swift */,
+			);
+			path = VideoCapture;
+			sourceTree = "<group>";
+		};
 		F4BB116D1FA1292300405F1B = {
 			isa = PBXGroup;
 			children = (
@@ -72,6 +88,7 @@
 		F4BB11781FA1292300405F1B /* ai11 */ = {
 			isa = PBXGroup;
 			children = (
+				F458D89E1FA384BD00ED46A7 /* VideoCapture */,
 				F4BB119A1FA139DF00405F1B /* ML Model */,
 				F4BB11951FA1323100405F1B /* Model */,
 				F4BB11941FA1322500405F1B /* Custom Views */,
@@ -197,7 +214,10 @@
 			files = (
 				F4BB11A21FA1413700405F1B /* CNNEmotions.mlmodel in Sources */,
 				F4BB117A1FA1292300405F1B /* AppDelegate.swift in Sources */,
+				F458D8A21FA384BD00ED46A7 /* VideoCameraType.swift in Sources */,
 				F4BB118E1FA12B2900405F1B /* MainFeatureCell.swift in Sources */,
+				F458D8A31FA384BD00ED46A7 /* VideoCapture.swift in Sources */,
+				F458D8A41FA384BD00ED46A7 /* AVCaptureDevice+Extension.swift in Sources */,
 				F4BB118C1FA12AF800405F1B /* MainViewController.swift in Sources */,
 				F4BB11921FA1320900405F1B /* ObjectDetectionViewController.swift in Sources */,
 				F4BB11901FA12C2300405F1B /* SampleData.swift in Sources */,

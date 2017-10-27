@@ -14,6 +14,7 @@ class ObjectDetectionViewController: UIViewController, UIImagePickerControllerDe
     @IBOutlet weak var selectedImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var confidenceLabel: UILabel!
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
     var selectedImage: UIImage? {
         didSet {
@@ -32,6 +33,8 @@ class ObjectDetectionViewController: UIViewController, UIImagePickerControllerDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.activityIndicatorView.stopAnimating()
         self.nameLabel.text = ""
         self.confidenceLabel.text = ""
         // Do any additional setup after loading the view.
@@ -82,6 +85,10 @@ class ObjectDetectionViewController: UIViewController, UIImagePickerControllerDe
     func detectObject() {
         // 모델이 이미지를 넣어서 계산
         if let ciImage = self.selectedCIImage {
+            self.activityIndicatorView.startAnimating()
+            self.nameLabel.text = ""
+            self.confidenceLabel.text = ""
+            
             DispatchQueue.global(qos: .userInitiated).async {
                 do {
                     let vnCoreMLModel = try VNCoreMLModel(for: Inceptionv3().model)
@@ -104,6 +111,7 @@ class ObjectDetectionViewController: UIViewController, UIImagePickerControllerDe
             }
             
             DispatchQueue.main.async {
+                self.activityIndicatorView.stopAnimating()
                 let result = results.first!
                 self.nameLabel.text = result.identifier
                 self.confidenceLabel.text = "\(String(format: "%.1f", result.confidence * 100))%"

@@ -7,29 +7,67 @@
 //
 
 import UIKit
+import Vision
 
 class RealtimeDetectionViewController: UIViewController {
 
+    @IBOutlet weak var cameraView: UIView!
+    @IBOutlet weak var categoryLabel: UILabel!
+    @IBOutlet weak var confidenceLabel: UILabel!
+    
+    var videoCapture: VideoCapture!
+    var visionRequestHandler = VNSequenceRequestHandler()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.categoryLabel = ""
+        self.confidenceLabel = ""
+        
+        let cameraSpec = VideoSpec(fps: 3, size: CGSize(width: 1280, height: 720))
+        videoCapture = VideoCapture(cameraType: .back, preferredSpec: cameraSpec, previewContainer: self.cameraView.layer)
+        self.videoCapture.imageBufferHandler = { (imageBuffer, timestamp, outputBuffer) in
+            self.categoryLabel = ""
+            self.confidenceLabel = ""
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.detectObject(image: imageBuffer)
+            }
+        }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let videoCapture = self.videoCapture {
+            videoCapture.startCapture()
+        }
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if let videoCapture = self.videoCapture {
+            videoCapture.stopCapture()
+        }
     }
-    */
 
+    func detectObject(image image: CVImageBuffer) {
+        do {
+            let vnCoreMLModel = try VNCoreMLModel(for: Inceptionv3().model)
+            let request = VNCoreMLRequest(model: vnCoreMLModel, completionHandler: self.handleObejctDetection)
+            request.imageCropAndScaleOption = .centerCrop
+            try self.visionRequestHandler.perform([request], on: image)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func handleObejctDetection(request: VNRequest, error: Error?) {
+        if let result = request.results?.first as? VNClassificationObservation {
+            DispatchQueue.main.async {
+                self.categoryLabel.text = result.identifier
+                self.confidenceLabel.text = "\(String(format: "%.1f", arguments: [result.confidence * 100]))%"
+            }
+        }
+    }
 }
