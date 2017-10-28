@@ -155,7 +155,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="srP-MT-QSa">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="srP-MT-QSa">
                                 <rect key="frame" x="0.0" y="64" width="375" height="187.5"/>
                             </imageView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SyU-Wh-VJo">
@@ -164,7 +164,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="187.5"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="veS-p3-Gbk">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="veS-p3-Gbk">
                                             <rect key="frame" x="93.5" y="0.0" width="187.5" height="187.5"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="veS-p3-Gbk" secondAttribute="height" id="yfr-D9-MwH"/>
@@ -287,6 +287,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundImageView" destination="srP-MT-QSa" id="eie-Ds-PnL"/>
+                        <outlet property="facesScrollView" destination="yX8-LB-WuD" id="GLF-3y-BRH"/>
                         <outlet property="loadingActivityIndicatorView" destination="Hx2-A5-X9G" id="jeZ-dI-QL9"/>
                         <outlet property="selectedImageView" destination="veS-p3-Gbk" id="lKR-HV-O8F"/>
                     </connections>
