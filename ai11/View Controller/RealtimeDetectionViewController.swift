@@ -21,14 +21,14 @@ class RealtimeDetectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.categoryLabel = ""
-        self.confidenceLabel = ""
+        self.categoryLabel.text = ""
+        self.confidenceLabel.text = ""
         
         let cameraSpec = VideoSpec(fps: 3, size: CGSize(width: 1280, height: 720))
         videoCapture = VideoCapture(cameraType: .back, preferredSpec: cameraSpec, previewContainer: self.cameraView.layer)
         self.videoCapture.imageBufferHandler = { (imageBuffer, timestamp, outputBuffer) in
-            self.categoryLabel = ""
-            self.confidenceLabel = ""
+            self.categoryLabel.text = ""
+            self.confidenceLabel.text = ""
             DispatchQueue.global(qos: .userInitiated).async {
                 self.detectObject(image: imageBuffer)
             }
@@ -51,12 +51,12 @@ class RealtimeDetectionViewController: UIViewController {
         }
     }
 
-    func detectObject(image image: CVImageBuffer) {
+    func detectObject(image selectedImage: CVImageBuffer) {
         do {
             let vnCoreMLModel = try VNCoreMLModel(for: Inceptionv3().model)
             let request = VNCoreMLRequest(model: vnCoreMLModel, completionHandler: self.handleObejctDetection)
             request.imageCropAndScaleOption = .centerCrop
-            try self.visionRequestHandler.perform([request], on: image)
+            try self.visionRequestHandler.perform([request], on: selectedImage)
         } catch {
             print(error)
         }

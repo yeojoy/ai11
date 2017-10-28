@@ -39,11 +39,6 @@ class ObjectDetectionViewController: UIViewController, UIImagePickerControllerDe
         self.confidenceLabel.text = ""
         // Do any additional setup after loading the view.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     @IBAction func addPhoto(_ sender: UIBarButtonItem) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
