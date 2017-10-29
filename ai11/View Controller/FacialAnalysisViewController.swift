@@ -32,21 +32,48 @@ class FacialAnalysisViewController: UIViewController, UIImagePickerControllerDel
     var seletedFace: UIImage? {
         didSet {
             if let face = self.seletedFace {
-                self.performFaceAnalysis(slectedImage: face)
+                self.hideAllLabels()
+                DispatchQueue.global(qos: .userInitiated).async {
+                    self.performFaceAnalysis(selectedImage: face)
+                }
             }
         }
     }
+    
+    var requests = [VNRequest]()
     
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var selectedImageView: UIImageView!
     @IBOutlet weak var loadingActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var facesScrollView: UIScrollView!
     
+    @IBOutlet weak var genderLabel: UILabel!
+    @IBOutlet weak var genderIdentifierLabel: UILabel!
+    @IBOutlet weak var genderConfidenceLabel: UILabel!
+    @IBOutlet weak var ageLabel: UILabel!
+    @IBOutlet weak var ageIdentifierLabel: UILabel!
+    @IBOutlet weak var ageConfidenceLabel: UILabel!
+    @IBOutlet weak var emotionLabel: UILabel!
+    @IBOutlet weak var emotionIdentifierLabel: UILabel!
+    @IBOutlet weak var emotionConfidenceLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadingActivityIndicatorView.stopAnimating()
+        hideAllLabels()
+        do {
+            let genderModel = try VNCoreMLModel(for: GenderNet().model)
+            self.requests.append(VNCoreMLRequest(model: genderModel, completionHandler: handleGenderClassification))
+            
+            let ageModel = try VNCoreMLModel(for: AgeNet().model)
+            self.requests.append(VNCoreMLRequest(model: ageModel, completionHandler: handleAgeClassification))
+            
+            let emotionModel = try VNCoreMLModel(for: CNNEmotions().model)
+            self.requests.append(VNCoreMLRequest(model: emotionModel, completionHandler: handleEmotionClassification))
+        } catch {
+            print(error)
+        }
         
-        // Do any additional setup after loading the view.
     }
 
     @IBAction func addPhoto(_ sender: UIBarButtonItem) {
@@ -84,6 +111,8 @@ class FacialAnalysisViewController: UIViewController, UIImagePickerControllerDel
             self.removeRectangles()
             self.loadingActivityIndicatorView.startAnimating()
             self.removeFaceImageView()
+            self.hideAllLabels()
+            
             DispatchQueue.global(qos: .userInitiated).async {
                 self.detectFaces()
             }
@@ -178,8 +207,72 @@ class FacialAnalysisViewController: UIViewController, UIImagePickerControllerDel
         }
     }
     
-    func performFaceAnalysis(slectedImage image: UIImage) {
-        
+    func performFaceAnalysis(selectedImage image: UIImage) {
+        do {
+            for request in self.requests {
+                let handler = VNImageRequestHandler(cgImage: image.cgImage!, options: [:])
+                try handler.perform([request])
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func handleGenderClassification(request: VNRequest, error: Error?) {
+        if let genderObservation = request.results?.first as? VNClassificationObservation {
+            DispatchQueue.main.async {
+                self.hideGenderLabels(hide: false)
+                self.genderIdentifierLabel.text = "\(genderObservation.identifier)"
+                self.genderConfidenceLabel.text = "\(String(format: "%.1f", genderObservation.confidence * 100))%"
+                print("gender : \(genderObservation.identifier), confidence : \(genderObservation.confidence)")
+            }
+        }
+    }
+    
+    func handleAgeClassification(request: VNRequest, error: Error?) {
+        if let ageObservation = request.results?.first as? VNClassificationObservation {
+            DispatchQueue.main.async {
+                self.hideAgeLabels(hide: false)
+                self.ageIdentifierLabel.text = "\(ageObservation.identifier)"
+                self.ageConfidenceLabel.text = "\(String(format: "%.1f", ageObservation.confidence * 100))%"
+                print("age : \(ageObservation.identifier), confidence : \(ageObservation.confidence)")
+            }
+        }
+    }
+    
+    func handleEmotionClassification(request: VNRequest, error: Error?) {
+        if let emotionObservation = request.results?.first as? VNClassificationObservation {
+            DispatchQueue.main.async {
+                self.hideEmotionLabels(hide: false)
+                self.emotionIdentifierLabel.text = "\(emotionObservation.identifier)"
+                self.emotionConfidenceLabel.text = "\(String(format: "%.1f", emotionObservation.confidence * 100))%"
+                print("emotion : \(emotionObservation.identifier), confidence : \(emotionObservation.confidence)")
+            }
+        }
+    }
+    
+    func hideAllLabels() {
+        hideGenderLabels(hide: true)
+        hideAgeLabels(hide: true)
+        hideEmotionLabels(hide: true)
+    }
+    
+    func hideGenderLabels(hide isHidden: Bool) {
+        self.genderLabel.isHidden = isHidden
+        self.genderIdentifierLabel.isHidden = isHidden
+        self.genderConfidenceLabel.isHidden = isHidden
+    }
+    
+    func hideAgeLabels(hide isHidden: Bool) {
+        self.ageLabel.isHidden = isHidden
+        self.ageIdentifierLabel.isHidden = isHidden
+        self.ageConfidenceLabel.isHidden = isHidden
+    }
+    
+    func hideEmotionLabels(hide isHidden: Bool) {
+        self.emotionLabel.isHidden = isHidden
+        self.emotionIdentifierLabel.isHidden = isHidden
+        self.emotionConfidenceLabel.isHidden = isHidden
     }
     
     /** 얼굴에 표시된 빨간 사각형을 제거 함 */
